@@ -1,0 +1,7 @@
+const express = require('express');
+const router = express.Router();
+
+roluter.use('/', require('./auth'));
+router.use('/posts', require('./post'));
+
+module.exports = router;

@@ -1,12 +1,22 @@
-const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true, trim: true },
-    email: { type: String, required: true, unique:  true, match: [/.+@.+\..+/, 'Please enter a valid email' ]},
-    thoughts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thought' }],
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-}, { timestamps: true });
+module.exports = (sequelize, DataTypes) => {
+    const User = sequelize.define('User', {
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+    });
 
-const User = mongoose.model('User', userSchema);
+    User.beforeCreate(async (user) => {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
+    });
 
-module.exports = User;
+    return User;
+};

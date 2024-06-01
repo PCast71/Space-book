@@ -1,28 +1,33 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-require('dotenv').config();
+const exphbs = require('express-handlebars');
+const session = require('express-session');
+const passport = require('passport');
+const db = require('./models');
+const routes = require('./routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//adding middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static('public'));
 
-// Routes
-const userRoutes = require('./routes/userRoutes');
-const thoughtRoutes = require('./routes/thoughtRoutes');
+//adding handlebars handler
+app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
-app.use('/api/users', userRoutes);
-app.use('/api/thoughts', thoughtRoutes);
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
 
-//Mongo
-mongoose(process.env.MONGODB_URI, {
-    useNewURlParser: true,
-    useUnifiedTopology: true,
-    }).then(() => {
-        console.log('Connected to MongoDB');
-        app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
-    }).catch((error) => {
-        console.log('Error connecting to MongoDB: ', error);
+//route setup
+app.use(routes);
+
+//db sync and server startup
+
+db.sequelize.sync().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
     });
+});
