@@ -3,14 +3,15 @@ const passport = require('passport');
 const db = require('../models');
 const router = express.Router();
 
-//Login handling
+// Login handling
 router.get('/login', (req, res) => {
     res.render('login');
 });
 
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
+    successRedirect: '/posts/dashboard',  // Redirect to dashboard after login
     failureRedirect: '/login',
+    failureFlash: true
 }));
 
 router.get('/signup', (req, res) => {
@@ -18,11 +19,18 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-    const {username, password } = req.body;
+    const { username, password } = req.body;
     try {
-        await db.User.create({ username, password});
+        const existingUser = await db.User.findOne({ where: { username } });
+        if (existingUser) {
+            req.flash('error', 'Username already exists');
+            return res.redirect('/signup');
+        }
+        await db.User.create({ username, password });
         res.redirect('/login');
     } catch (err) {
+        console.error(err);
+        req.flash('error', 'An error occurred during signup');
         res.redirect('/signup');
     }
 });
@@ -30,7 +38,7 @@ router.post('/signup', async (req, res) => {
 // Logging out
 router.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('/');
+    res.redirect('/login');
 });
 
 module.exports = router;

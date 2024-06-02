@@ -1,18 +1,27 @@
 <h1>Dashboard</h1>
-<a href="/logout"> Logout </a>
-<div>
-    <h2>Your Posts</h2>
-    {{#if posts.length}}
-        {{#each posts}}
-          <h3><a href="/posts/{{this.id}}">{{this.title}}</a></h3>
-        {{/each}}
-    {{else}}
-     <p>No posts yet feel free to add one!</p>
-     {{/if}}
-</div>
+<h2>Your Posts</h2>
+{{#if posts.length}}
+    {{#each posts}}
+        <div class="post">
+            <h3>{{this.title}}</h3>
+            <p>{{this.content}}</p>
+            <form action="/posts/{{this.id}}/delete" method="POST">
+                <button type="submit">Delete</button>
+            </form>
+            <form action="/posts/{{this.id}}/update" method="POST">
+                <input type="text" name="title" value="{{this.title}}" required>
+                <textarea name="content" required>{{this.content}}</textarea>
+                <button type="submit">Update</button>
+            </form>
+        </div>
+    {{/each}}
+{{else}}
+    <p>No posts yet.</p>
+{{/if}}
+
 <h2>Add New Post</h2>
 <form action="/posts/create" method="POST">
-<input type="text" name="title" placeholder="Title" required>
-<textarea name="content" placeholder="Content" required></textarea>
-<button type="submit">Post</button>
+    <input type="text" name="title" placeholder="Title" required>
+    <textarea name="content" placeholder="Content" required></textarea>
+    <button type="submit">Create</button>
 </form>
