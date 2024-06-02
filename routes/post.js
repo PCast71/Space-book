@@ -1,6 +1,6 @@
 const express = require('express');
 const { ensureAuthenticated } = require('../config/auth');
-const db - require('../models');
+const db = require('../models');
 const router = express.Router();
 
 // Homepage
@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
 
 //Gets dashboard
 router.get('/dashboard', ensureAuthenticated, async(req,res) => {
-    const post = await db.Post.findAll({ where: { UserId: req.user.id } });
+    const posts = await db.Post.findAll({ where: { UserId: req.user.id } });
     res.render('dashboard', { posts });
 });
 
@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
           include: [
             db.User,
             {
-                model: db.Commnet,
+                model: db.Comment,
                 include: [db.User]
             }
           ],

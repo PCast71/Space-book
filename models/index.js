@@ -5,12 +5,12 @@ const sequelize = new Sequelize(config.databases, config.username, config.passwo
 
 const db = {};
 
-db.sequlize = sequelize;
+db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
     db.User = require('./user')(sequelize, Sequelize.DataTypes);
     db.Post = require('./post')(sequelize, Sequelize.DataTypes);
-    db.Comment = require('./comment')(sequelize, Sequelize, DataTypes);
+    db.Comment = require('./comment')(sequelize, Sequelize.DataTypes);
 
 
 Object.keys(db).forEach((modelName) => {
