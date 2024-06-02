@@ -1,0 +1,11 @@
+<h1>Landing Page</h1>
+<div>
+    {{#if posts.length}}
+        {{#each posts}}
+        <h2><a href="/posts/{{this.id}}">{{this.title}}</a></h2>
+        <p> by {{this.User.username}} on {{this.createdAt}}</p>
+        {{/each}}
+        {{else}}
+        <p>No posts yet.</p>
+        {{/if}}
+</div>
