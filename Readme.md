@@ -22,7 +22,7 @@ Welcome to Spacebook, the one-stop tech blog platform to share, collaborate, and
 
 1. Clone the repository:
     ```sh
-    git clone <repository-url>
+    git clone git@github.com:PCast71/Space-book.git
     ```
 
 2. Navigate to the project directory:
