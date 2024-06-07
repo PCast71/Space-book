@@ -18,7 +18,12 @@ Welcome to Spacebook, the one-stop tech blog platform to share, collaborate, and
 - Comment on blog posts.
 - User-specific dashboard to manage posts.
 
+## Heroku Deployment
+Follow link to deployed app: https://space-booke-1d5e2b494fce.herokuapp.com/
+use 'spacey2024' for both username and password
+
 ## Installation
+
 
 1. Clone the repository:
     ```sh
