@@ -15,15 +15,21 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Handlebars
-app.engine('handlebars', engine({ defaultLayout: 'main' }));
+app.engine('handlebars', engine({
+  defaultLayout: 'main',
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true,
+  }
+}));
 app.set('view engine', 'handlebars');
 
 // Sessions
 app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
-app.use(flash()); // Enable flash messages
+app.use(flash());
 
 // Passport
-require('./config/passport')(passport)
+require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -32,10 +38,10 @@ app.use(routes);
 
 // Flash message middleware
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
-    next();
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
 });
 
 // Syncing database and starting server
